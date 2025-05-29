@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Braillify – Empowering Inclusivity</title>
+  <style>
+    :root {
+      --primary-color: #0056b3;
+      --accent-color: #007BFF;
+      --text-color: #333;
+      --background-color: #f9f9f9;
+      --nav-bg-color: #004a99;
+      --section-bg: white;
+      --footer-bg: #eee;
+    }
+
+    body.dark {
+      --primary-color: #66aaff;
+      --accent-color: #3399ff;
+      --text-color: #eee;
+      --background-color: #121212;
+      --nav-bg-color: #1a1a1a;
+      --section-bg: #1f1f1f;
+      --footer-bg: #2a2a2a;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    #box {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid white;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+      width: fit-content;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    nav {
+      background-color: var(--nav-bg-color);
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      flex-wrap: wrap;
+      transition: background-color 0.3s;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+    }
+
+    .toggle-switch input[type="checkbox"] {
+      width: 40px;
+      height: 20px;
+      appearance: none;
+      background: #ccc;
+      border-radius: 20px;
+      position: relative;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch input[type="checkbox"]::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch input[type="checkbox"]:checked {
+      background: #66aaff;
+    }
+
+    .toggle-switch input[type="checkbox"]:checked::before {
+      transform: translateX(20px);
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: var(--primary-color);
+    }
+
+    .section {
+      background: var(--section-bg);
+      padding: 2rem;
+      margin-top: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+
+    textarea, .output, canvas, video {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 1rem;
+      box-sizing: border-box;
+    }
+
+    .output {
+      background: #f0f0f0;
+      min-height: 100px;
+      font-family: 'Courier New', monospace;
+      color: black;
+    }
+
+    body.dark .output {
+      background: #f0f0f0 !important;
+      color: black !important;
+    }
+
+    #snap {
+      margin-top: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #snap:hover {
+      background: var(--primary-color);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem;
+      background: var(--footer-bg);
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+
+    .preview-container {
+      text-align: center;
+    }
+
+    .voice-input-container {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .voice-button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .voice-button:hover {
+      background: var(--primary-color);
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Braillify – A One-Stop Solution to Inclusivity</h1>
+    <p id="box">Bridging the gap between vision and touch through technology.</p>
+  </header>
+
+  <nav>
+    <a href="#text-to-braille">Text to Braille</a>
+    <a href="#image-processing">Image Capture</a>
+    <a href="#about">About</a>
+    <div class="toggle-switch">
+      <label for="darkToggle">Dark Mode</label>
+      <input type="checkbox" id="darkToggle" />
+    </div>
+  </nav>
+
+  <main>
+    <section id="text-to-braille" class="section">
+      <h2>Text to Braille Converter</h2>
+      <p>Type any text below, and we will instantly convert it into visually readable Braille symbols. Great for learning and accessibility!</p>
+      <label for="textInput">Enter Text:</label>
+      <textarea id="textInput" rows="5" placeholder="Type something like 'Hello 123'..."></textarea>
+      <div class="voice-input-container">
+        <button id="voiceBtn" class="voice-button" title="Start voice input">🎤 Start Voice Input</button>
+        <span id="voiceStatus" aria-live="polite"></span>
+      </div>
+
+      <label for="brailleOutput">Braille Output:</label>
+      <div id="brailleOutput" class="output" aria-live="polite"></div>
+    </section>
+
+    <section id="image-processing" class="section">
+      <h2>Live Camera Capture</h2>
+      <p>Use your camera to take a picture of handwritten or printed braille page, and let Braillify process it intelligently in the backend.</p>
+
+      <div class="preview-container">
+        <video id="video" width="320" height="240" autoplay></video>
+        <br />
+        <button id="snap">Capture & Send to Backend</button>
+        <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <h2>About Braillify</h2>
+      <p><strong>Braillify</strong> is a smart, inclusive web application aimed at helping visually impaired individuals by translating 
+      digital text into Braille. By combining machine learning, optical recognition, and interactive tools, we empower education and communication for all.</p>
+      <p>Our team, <em>"TPS Innovators"</em>, has worked hard to make this web application, which will help millions of blind users and make the world a more inclusive place for them. This web app converts text to braille and <strong>vice versa</strong>, facilitating equality and providing a better environment for the visually impaired.</p>
+    </section>
+  </main>
+
+  <footer>
+    Made with ❤️ for accessibility & inclusion · Braillify<br>&copy; 2025 TPS Innovators
+  </footer>
+
+  <script>
+    const textInput = document.getElementById("textInput");
+    const brailleOutput = document.getElementById("brailleOutput");
+
+    const letterToBraille = {
+      'A': '⠁', 'B': '⠃', 'C': '⠉', 'D': '⠙', 'E': '⠑',
+      'F': '⠋', 'G': '⠛', 'H': '⠓', 'I': '⠊', 'J': '⠚',
+      'K': '⠅', 'L': '⠇', 'M': '⠍', 'N': '⠝', 'O': '⠕',
+      'P': '⠏', 'Q': '⠟', 'R': '⠗', 'S': '⠎', 'T': '⠞',
+      'U': '⠥', 'V': '⠧', 'W': '⠺', 'X': '⠭', 'Y': '⠽', 'Z': '⠵',
+      '1': '⠁', '2': '⠃', '3': '⠉', '4': '⠙', '5': '⠑',
+      '6': '⠋', '7': '⠛', '8': '⠓', '9': '⠊', '0': '⠚',
+      ' ': '⠀'
+    };
+
+    function convertToBraille(text) {
+      let input = text.toUpperCase();
+      let output = "";
+      let numberMode = false;
+
+      for (let char of input) {
+        if (char >= '0' && char <= '9') {
+          if (!numberMode) {
+            output += '⠼';
+            numberMode = true;
+          }
+          output += letterToBraille[char] || '';
+        } else if (char >= 'A' && char <= 'Z') {
+          numberMode = false;
+          output += letterToBraille[char] || '';
+        } else if (char === ' ') {
+          numberMode = false;
+          output += letterToBraille[char];
+        } else {
+          numberMode = false;
+          output += '?';
+        }
+      }
+      return output;
+    }
+
+    textInput.addEventListener("input", () => {
+      brailleOutput.textContent = convertToBraille(textInput.value);
+    });
+
+    // Voice input setup
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceStatus = document.getElementById('voiceStatus');
+
+    let recognition;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        voiceStatus.textContent = 'Listening...';
+        voiceBtn.disabled = true;
+      };
+
+      recognition.onerror = (event) => {
+        voiceStatus.textContent = 'Error occurred: ' + event.error;
+        voiceBtn.disabled = false;
+      };
+
+      recognition.onend = () => {
+        voiceStatus.textContent = '';
+        voiceBtn.disabled = false;
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        textInput.value = transcript;
+        brailleOutput.textContent = convertToBraille(transcript);
+      };
+
+    } else {
+      voiceBtn.disabled = true;
+      voiceStatus.textContent = 'Speech Recognition not supported in this browser.';
+    }
+
+    voiceBtn.addEventListener('click', () => {
+      if (recognition) {
+        recognition.start();
+      }
+    });
+
+    // Camera capture code
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snap = document.getElementById('snap');
+    const context = canvas.getContext('2d');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.error("Error accessing camera: ", err);
+      });
+
+    snap.addEventListener('click', () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/png');
+
+      fetch('/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: imageData })
+      })
+      .then(res => res.text())
+      .then(data => alert("Prediction: " + data))
+      .catch(err => alert('Error uploading image: ' + err));
+    });
+
+    // Dark mode toggle
+    const toggle = document.getElementById("darkToggle");
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark", toggle.checked);
+    });
+  </script>
+</body>
+</html>
